@@ -1,43 +1,24 @@
-import { createRouter, createMemoryHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 import Home from '@/pages/Home.vue';
 
 const routes = [
 	{
 		path: '/',
-		name: 'Home',
+		name: 'home',
 		component: Home
 	},
 	{
-		path: '/about',
-		name: 'About',
-		component: () => import('@/pages/About.vue')
-	},
-	{
-		path: '/brazil',
-		name: 'Brazil',
-		component: () => import('@/pages/Brazil.vue')
-	},
-	{
-		path: '/jamaica',
-		name: 'Jamaica',
-		component: () => import('@/pages/Jamaica.vue')
-	},
-	{
-		path: '/panama',
-		name: 'Panama',
-		component: () => import('@/pages/Panama.vue')
-	},
-	{
-		path: '/hawaii',
-		name: 'Hawaii',
-		component: () => import('@/pages/Hawaii.vue')
+		path: '/destination/:id/:slug',
+		name: 'destination.show',
+		component: () => import('@/pages/DestinationShow.vue')
 	}
 ];
 
 const router = createRouter({
-	history: createMemoryHistory(),
-	routes
+	history: createWebHistory(),
+	routes,
+	linkActiveClass: 'vue-school-active-link'
 });
 
 export default router;
