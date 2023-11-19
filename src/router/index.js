@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
+import { createRouter, createWebHistory, useRoute } from 'vue-router';
+const route = useRoute();
 import Home from '@/pages/Home.vue';
 
 const routes = [
@@ -11,7 +11,46 @@ const routes = [
 	{
 		path: '/destination/:id/:slug',
 		name: 'destination.show',
-		component: () => import('@/pages/DestinationShow.vue')
+		component: () => import('@/pages/DestinationShow.vue'),
+		/* 
+		props: true
+		
+		props: {
+			newProp: false,
+		}
+		 */
+		//props: (route) => ({ newProp: someExpresion ? true : false })
+		props: (route) => ({ ...route.params, id: parseInt(route.params.id) }),
+		children: [
+			{
+				// as this is a child the path already inlcude the parent path, so we can leave only the child path
+				path: ':experienceSlug',
+				name: 'experience.show',
+				component: () => import('@/pages/ExperienceShow.vue'),
+				props: (route) => ({ ...route.params, id: parseInt(route.params.id) })
+			}
+		]
+	},
+	/* {
+
+		this code is now added in the childer property for destination, si it can be a nested route
+
+		path: '/destination/:id/:slug/:experienceSlug',
+		name: 'experience.show',
+		component: () => import('@/pages/ExperienceShow.vue'),
+
+		// here is important to knkow that whatever is returned from props function is all of the props that will be passed to the component.
+		// in other words even though :slug and :experienceSlug exist in the path they will not make it as params to the component
+
+		// we can spread(... operador) route params into the returned object so all the params will exist
+		props: (route) => ({ ...route.params, id: parseInt(route.params.id) })
+	} */
+
+	// Not Found route
+	{
+		path: '/:pathMatch(.*)*',
+		name: 'NotFound',
+		component: () => import('@/pages/NotFound.vue')
 	}
 ];
 

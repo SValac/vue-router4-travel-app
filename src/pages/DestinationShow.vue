@@ -2,15 +2,38 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import sourceData from '@/data.json';
+import ExperienceCard from '@/components/ExperienceCard.vue';
+import GoBack from '@/components/GoBack.vue';
+import router from '@/router';
 
 const route = useRoute();
+
+// we can difne props that we get from the route params
+defineProps({
+	id: {
+		type: Number,
+		default: 1
+	},
+	slug: {
+		type: String,
+		default: ''
+	}
+});
+
 //const destinationId = computed(() => parseInt(route.params.id));
 
 const destination = ref(null);
 
 async function getData() {
-	const response = await fetch(`https://travel-dummy-api.netlify.app/${route.params.slug}.json`);
-	destination.value = await response.json();
+	try {
+		const response = await fetch(
+			`https://travel-dummy-api.netlify.app/${route.params.slug}.json`
+		);
+		destination.value = await response.json();
+	} catch (error) {
+		router.push({ name: 'NotFound' });
+		console.log(error);
+	}
 }
 
 /* 
@@ -39,19 +62,39 @@ getData();
 </script>
 
 <template>
-	<section
-		v-if="destination"
-		class="destination"
-	>
-		<h1>{{ destination.name }}</h1>
-		<div class="destination-details">
-			<img
-				:src="`/images/${destination.image}`"
-				:alt="destination.name"
-			/>
-			<p>{{ destination.description }}</p>
-		</div>
-	</section>
+	<div>
+		<section
+			v-if="destination"
+			class="destination"
+		>
+			<h1>{{ destination.name }}</h1>
+			<GoBack />
+			<div class="destination-details">
+				<img
+					:src="`/images/${destination.image}`"
+					:alt="destination.name"
+				/>
+				<p>{{ destination.description }}</p>
+			</div>
+		</section>
+		<section
+			v-if="destination"
+			class="experiences"
+		>
+			<h2>Top Experiences in {{ destination.name }}</h2>
+			<div class="cards">
+				<RouterLink
+					v-for="experience in destination.experiences"
+					:key="experience.slug"
+					:to="{ name: 'experience.show', params: { experienceSlug: experience.slug } }"
+				>
+					<ExperienceCard :experience="experience" />
+				</RouterLink>
+			</div>
+			<!-- Nested Torute to show Experience in the same page using routerView -->
+			<RouterView />
+		</section>
+	</div>
 </template>
 
 <style scoped></style>
