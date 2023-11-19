@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, useRoute } from 'vue-router';
-const route = useRoute();
 import Home from '@/pages/Home.vue';
 
 const routes = [
@@ -21,6 +20,26 @@ const routes = [
 		 */
 		//props: (route) => ({ newProp: someExpresion ? true : false })
 		props: (route) => ({ ...route.params, id: parseInt(route.params.id) }),
+
+		// Navigation Guards
+		async beforeEnter(to, from) {
+			try {
+				const data = await fetch(
+					`https://travel-dummy-api.netlify.app/${to.params.slug}.json`
+				);
+
+				const exist = await data.json();
+			} catch (error) {
+				console.log('el error es...', error);
+				return {
+					name: 'NotFound',
+					// allows to keep the URL while rendering a different page
+					params: { pathMatch: to.path.split('/').slice(1) },
+					query: to.query,
+					hash: to.hash
+				};
+			}
+		},
 		children: [
 			{
 				// as this is a child the path already inlcude the parent path, so we can leave only the child path

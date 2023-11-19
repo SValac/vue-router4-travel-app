@@ -31,7 +31,7 @@ async function getData() {
 		);
 		destination.value = await response.json();
 	} catch (error) {
-		router.push({ name: 'NotFound' });
+		//router.push({ name: 'NotFound' });
 		console.log(error);
 	}
 }
