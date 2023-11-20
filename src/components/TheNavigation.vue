@@ -21,6 +21,7 @@ const destinations = sourceData.destinations;
 			}"
 			>{{ destination.name }}</RouterLink
 		>
+		<RouterLink :to="{ name: 'protected' }">Protected</RouterLink>
 	</div>
 </template>
 

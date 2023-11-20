@@ -8,6 +8,20 @@ const routes = [
 		component: Home
 	},
 	{
+		path: '/protected',
+		name: 'protected',
+		component: () => import('@/pages/ProtectedView.vue'),
+		// meta properties, to specifie this route options
+		meta: {
+			requiresAuth: true
+		}
+	},
+	{
+		path: '/login',
+		name: 'login',
+		component: () => import('@/pages/LoginView.vue')
+	},
+	{
 		path: '/destination/:id/:slug',
 		name: 'destination.show',
 		component: () => import('@/pages/DestinationShow.vue'),
@@ -92,6 +106,16 @@ const router = createRouter({
 				}, 1000);
 			})
 		);
+	}
+});
+
+// before Each, this is called Global Navigation Guard, means every single time a rpoute changes in the Application this function is fired.
+
+// here we can acces the meta on the route we are vaigation to and check the requited property is defined
+router.beforeEach((to, from) => {
+	if (to.meta.requiresAuth && !window.user) {
+		// need to log in fi not Already logged in
+		return { name: 'login' };
 	}
 });
 
