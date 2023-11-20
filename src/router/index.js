@@ -76,7 +76,23 @@ const routes = [
 const router = createRouter({
 	history: createWebHistory(),
 	routes,
-	linkActiveClass: 'vue-school-active-link'
+	linkActiveClass: 'vue-school-active-link',
+	scrollBehavior(to, from, savedPosition) {
+		// retun a scrollToOptions object from this function,
+		// this object can contain any for the folowing properties
+
+		// return {top: null, from:null, savedPosition: null}
+
+		return (
+			savedPosition ||
+			// set new promise to wait untill animation ends to return to top 0
+			new Promise((resolve, reject) => {
+				setTimeout(() => {
+					resolve({ top: 0, scrollBehavior: 'smooth' });
+				}, 1000);
+			})
+		);
+	}
 });
 
 export default router;
