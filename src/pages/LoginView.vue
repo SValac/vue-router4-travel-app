@@ -1,7 +1,8 @@
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { ref } from 'vue';
 const router = useRouter();
+const route = useRoute();
 
 const username = ref('');
 const password = ref('');
@@ -9,7 +10,12 @@ const password = ref('');
 const login = () => {
 	//auth user in API
 	window.user = username.value;
-	router.push({ name: 'protected' });
+
+	// using query params to redirect user
+	// or if the query oarams doenst exist redirectto protected
+	const redirectPath = route.query.redirect || '/protected';
+	router.push(redirectPath);
+	//router.push({ name: 'protected' });
 };
 </script>
 
