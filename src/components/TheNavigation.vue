@@ -6,22 +6,25 @@ const destinations = sourceData.destinations;
 
 <template>
 	<div id="nav">
-		<RouterLink
+		<AppLink
 			id="logo"
 			:to="{ name: 'home' }"
-			>Vue School Travel App</RouterLink
+			>Vue School Travel App</AppLink
 		>
 
-		<RouterLink
+		<AppLink
 			v-for="destination in destinations"
 			:key="destination.id"
 			:to="{
 				name: 'destination.show',
 				params: { id: destination.id, slug: destination.slug }
 			}"
-			>{{ destination.name }}</RouterLink
+			>{{ destination.name }}</AppLink
 		>
-		<RouterLink :to="{ name: 'protected' }">Protected</RouterLink>
+		<AppLink :to="{ name: 'protected' }">Protected</AppLink>
+		<AppLink to="https://vueschool.io/lessons/extending-router-link-for-external-urls"
+			>External</AppLink
+		>
 	</div>
 </template>
 
